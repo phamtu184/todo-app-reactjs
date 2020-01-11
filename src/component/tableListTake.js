@@ -7,13 +7,15 @@ class Tablelisttask extends Component{
     super();
     this.newItem = this.newItem.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
     this.state = {
       clearItem: '',
-      todoItems: [
-        {title:'hoc react', isComplete: true, level: 'low'},
-        {title:'uong nuoc', isComplete: false, level: 'risk'},
-        {title:'an com', isComplete: true, level: 'medium'}
-      ]
+      todoItems : JSON.parse(localStorage.getItem('todoItems'))
+      // todoItems: [
+      //   {title:'hoc react', isComplete: true, level: 'low'},
+      //   {title:'uong nuoc', isComplete: false, level: 'risk'},
+      //   {title:'an com', isComplete: true, level: 'medium'}
+      // ]
     }
   }
   selectItem(item){
@@ -38,15 +40,54 @@ class Tablelisttask extends Component{
     if(!newTaskvl){return;}
     newTaskvl = newTaskvl.trim();
     if(!newTaskvl){return;}
-    this.setState({
-      clearItem: '',
-      todoItems:[
+    if(!this.state.todoItems){
+      this.setState({
+        clearItem: '',
+        todoItems:[
+          {
+            title: newTaskvl, isComplete: false, level: newLevelvl
+          }
+        ]
+      })
+      console.log(this.state.todoItems);
+      localStorage.setItem('todoItems', JSON.stringify([
+        {
+          title: newTaskvl, isComplete: false, level: newLevelvl
+        }
+      ]))
+    }
+    else{
+      this.setState({
+        clearItem: '',
+        todoItems:[
+          {
+            title: newTaskvl, isComplete: false, level: newLevelvl
+          },
+          ...this.state.todoItems
+        ]
+      })
+      console.log(this.state.todoItems);
+      localStorage.setItem('todoItems', JSON.stringify([
         {
           title: newTaskvl, isComplete: false, level: newLevelvl
         },
         ...this.state.todoItems
-      ]
-    })
+      ]))
+    }
+  }
+  deleteItem(item){
+    return () => {
+      const index = this.state.todoItems.indexOf(item);
+      this.setState({
+        todoItems:[
+          ...this.state.todoItems.slice(0, index),
+          {
+            ...this.state.todoItems.slice(index , index+1)
+          },
+          ...this.state.todoItems.slice(index + 1)
+        ]
+      })
+    }
   }
   handleChange(e){
     this.setState({
@@ -55,22 +96,29 @@ class Tablelisttask extends Component{
   }
   render(){
     let {clearItem,todoItems} = this.state;
-    let listItem = todoItems.map((item, index)=>
+    let listItem;
+    if(!todoItems){
+      listItem = null;
+    }
+    else{
+      listItem = todoItems.map((item, index)=>
       <tr key={index}>
         <td>
           <p>{index+1}</p>
         </td>
         <td>
-          <Todoitem title={item.title} isComplete={item.isComplete} onClick={this.selectItem(item)}></Todoitem>
+          <Todoitem title={item.title} isComplete={item.isComplete} selectItem={this.selectItem(item)}></Todoitem>
         </td>
         <td>
           <Level level={item.level}></Level>
         </td>
         <td>
-          <button type="button" className="btn btn-danger">Delete</button>
+          <button type="button" className="btn btn-danger" onClick={this.deleteItem(item)}>Delete</button>
         </td>
       </tr>
-    )
+      )
+    }
+    
     return(
       <table className="table table-bordered table-hover">
         <thead>

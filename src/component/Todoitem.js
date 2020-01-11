@@ -5,11 +5,11 @@ import checkDoneImg from '../image/check-done.svg';
 //import classNames from 'classnames/bind';
 class Todoitem extends Component{
   isDone(){
-    const onClick = this.props.onClick;
+    const selectItem = this.props.selectItem;
     if(this.props.isComplete){
       return(
         <div className="TodoItem Todo-complete">
-          <img onClick={onClick} src={checkImg} alt="checkImg" width={32}></img>
+          <img onClick={selectItem} src={checkImg} alt="checkImg" width={32}></img>
           <p className="ml-4">{ this.props.title }</p>
         </div> 
       )
@@ -17,7 +17,7 @@ class Todoitem extends Component{
     else{
       return(
         <div className="TodoItem">
-          <img onClick={onClick} src={checkDoneImg} alt="checkDoneImg" width={32}></img>
+          <img onClick={selectItem} src={checkDoneImg} alt="checkDoneImg" width={32}></img>
           <p className="ml-4">{ this.props.title}</p>
         </div> 
       )
