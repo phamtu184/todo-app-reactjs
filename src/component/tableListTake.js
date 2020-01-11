@@ -5,7 +5,10 @@ import checkAll from '../image/check-all.svg';
 class Tablelisttask extends Component{
   constructor(){
     super();
+    this.newItem = this.newItem.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.state = {
+      clearItem: '',
       todoItems: [
         {title:'hoc react', isComplete: true, level: 'low'},
         {title:'uong nuoc', isComplete: false, level: 'risk'},
@@ -29,11 +32,29 @@ class Tablelisttask extends Component{
       })
     }
   }
-  addWork(){
-    console.log('add work')
+  newItem(event){
+    let newTaskvl = this.refs.newTask.value;
+    let newLevelvl = this.refs.newLevel.value;
+    if(!newTaskvl){return;}
+    newTaskvl = newTaskvl.trim();
+    if(!newTaskvl){return;}
+    this.setState({
+      clearItem: '',
+      todoItems:[
+        {
+          title: newTaskvl, isComplete: false, level: newLevelvl
+        },
+        ...this.state.todoItems
+      ]
+    })
+  }
+  handleChange(e){
+    this.setState({
+      clearItem: e.target.value
+    })
   }
   render(){
-    let {todoItems} = this.state;
+    let {clearItem,todoItems} = this.state;
     let listItem = todoItems.map((item, index)=>
       <tr key={index}>
         <td>
@@ -65,17 +86,19 @@ class Tablelisttask extends Component{
             <td><p>0</p></td>
             <td>
               <img src={checkAll} width={32} height={32} alt="checkAll"></img>
-              <input type='text' className="ml-4" placeholder="Add a new item"></input>
+              <input type='text' className="ml-4" placeholder="Add a new item" ref="newTask" value={clearItem} onChange={this.handleChange} size={32} maxLength={32}></input>
             </td>
             <td>
-              <select>
-                <option value="low">low</option>
-                <option value="medium">medium</option>
-                <option value="risk">risk</option>
-              </select>
+              <div className="select">
+                <select ref="newLevel">
+                  <option value="low">low</option>
+                  <option value="medium">medium</option>
+                  <option value="risk">risk</option>
+                </select>
+              </div>
             </td>
             <td>
-              <button type="button" className="btn btn-primary">Add</button>
+              <button type="button" className="btn btn-primary" onClick={this.newItem}>Add</button>
             </td>
           </tr>
           {listItem}

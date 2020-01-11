@@ -4,8 +4,7 @@ import Tablelisttask from './component/tableListTake'
 function App() {
   return (
     <div className="App container">
-      <h2 className="text-center mt-2 mb-2">Todo List</h2>
-      <button type="button" className="btn btn-primary mb-2 mt-2">Add</button>
+      <h2 className="text-center mt-2 mb-4">Todo List</h2>
       <Tablelisttask></Tablelisttask>
     </div>
   );
