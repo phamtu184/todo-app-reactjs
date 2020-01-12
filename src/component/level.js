@@ -30,9 +30,7 @@ class Level extends Component{
       <div>
         {this.level()}
       </div>
-      
     )
-    
   }
 }
 
